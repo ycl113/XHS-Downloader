@@ -1,0 +1,38 @@
+# Python相关忽略
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# 环境配置
+.env
+.venv/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 日志文件
+*.log
+
+# Node.js相关忽略
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# 操作系统生成的文件
+.DS_Store
+Thumbs.db
+
+# IDE和编辑器生成的文件
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# 构建目录
+build/
+dist/
