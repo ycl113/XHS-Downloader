@@ -36,3 +36,8 @@ Thumbs.db
 # 构建目录
 build/
 dist/
+
+# 其他
+Download/
+test/
+*.db

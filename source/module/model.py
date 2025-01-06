@@ -7,6 +7,7 @@ class ExtractParams(BaseModel):
     index: list = None
     cookie: str = None
     skip: bool = False
+    workpath: str = None
 
 
 class ExtractData(BaseModel):

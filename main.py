@@ -13,7 +13,7 @@ async def example():
     """通过代码设置参数，适合二次开发"""
     # 示例链接
     error_link = "https://github.com/JoeanAmier/XHS_Downloader"
-    demo_link = "https://www.xiaohongshu.com/explore/xxxxxxxxxx"
+    demo_link = "https://www.xiaohongshu.com/explore/6620ae700000000001007dbb?xsec_token=ABQC_y94RSUZqnEz25byU3cIWyQoj4gB_upmMip2eTXRY=&xsec_source=pc_user"
     multiple_links = f"{demo_link} {demo_link} {demo_link}"
     # 实例对象
     work_path = "D:\\"  # 作品数据/文件保存根路径，默认值：项目根路径
@@ -69,8 +69,8 @@ if __name__ == '__main__':
             CancelledError,
     ):
         if len(argv) == 1:
-            run(app())
-        elif argv[1] == "server":
             run(server())
+        elif argv[1] == "cmd":
+            run(app())
         else:
             cli()

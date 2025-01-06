@@ -65,6 +65,7 @@ class Manager:
             live_download: bool,
             download_record: bool,
             folder_mode: bool,
+            save_xls: bool,
             _print: bool,
     ):
         self.root = root
@@ -112,6 +113,7 @@ class Manager:
         self.image_download = self.check_bool(image_download, True)
         self.video_download = self.check_bool(video_download, True)
         self.live_download = self.check_bool(live_download, True)
+        self.save_xls = self.check_bool(save_xls, True)
 
     def __check_path(self, path: str) -> Path:
         if not path:

@@ -1,0 +1,20 @@
+{
+    "work_path": "/Users/youcl/AIAgent/XHS",
+    "folder_name": "Download",
+    "name_format": "发布时间 作者昵称 作品标题",
+    "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+    "cookie": "",
+    "proxy": null,
+    "timeout": 10,
+    "chunk": 2097152,
+    "max_retry": 5,
+    "record_data": false,
+    "image_format": "PNG",
+    "image_download": true,
+    "video_download": true,
+    "live_download": false,
+    "folder_mode": true,
+    "download_record": true,
+    "save_xls": true,
+    "language": "zh_CN"
+}

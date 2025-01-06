@@ -60,6 +60,7 @@ class Download:
         self.image_download = manager.image_download
         self.video_download = manager.video_download
         self.live_download = manager.live_download
+        self.save_xls = manager.save_xls
 
     async def run(
             self,
@@ -105,6 +106,7 @@ class Download:
 
     def __generate_path(self, name: str):
         path = self.manager.archive(self.folder, name, self.folder_mode)
+        #print("path:" + path.resolve())
         path.mkdir(exist_ok=True)
         return path
 

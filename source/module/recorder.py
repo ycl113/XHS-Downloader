@@ -48,6 +48,12 @@ class IDRecorder:
         if self.switch:
             await self.cursor.execute("SELECT ID FROM explore_id")
             return [i[0] for i in await self.cursor.fetchmany()]
+        
+    async def selectCount(self):
+        if self.switch:
+            await self.cursor.execute("SELECT COUNT(*) FROM explore_id")
+            count = await self.cursor.fetchone()
+            return count[0] if count else 0
 
     async def __aenter__(self):
         await self._connect_database()
@@ -83,7 +89,7 @@ class DataRecorder(IDRecorder):
 
     def __init__(self, manager: Manager):
         super().__init__(manager)
-        self.file = manager.folder.joinpath("ExploreData.db")
+        self.file = manager.root.joinpath("ExploreData.db")
         self.switch = manager.record_data
 
     async def _connect_database(self):

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小红书下载神器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            width: 100%; /* 自适应宽度 */
+            max-width: 1000px; /* 最大宽度 */
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        textarea, input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            width: 100%; /* 自适应宽度 */
+            max-width: 1000px; /* 最大宽度 */
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow-x: auto; /* 添加水平滚动条 */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th, td:nth-child(1) {
+            white-space: nowrap; /* 不换行 */
+        }
+        td:nth-child(2) {
+            white-space: normal; /* 内容自动换行 */
+            word-wrap: break-word; /* 内容自动换行 */
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        /* 新增的微信二维码样式 */
+        .wechat-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+        }
+        .wechat-qrcode {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .error-message {
+            color: red;
+            margin-top: -15px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>小红书下载神器</h1>
+    <!-- 微信二维码 -->
+    <div class="wechat-container">
+        <p>联系作者</p>
+        <img src="../static/wechat.jpeg" alt="微信二维码" class="wechat-qrcode">
+    </div>
+
+    <form id="url-form">
+        <label for="url-input">请输入小红书链接地址 (每行一个)</label>
+        <textarea id="url-input" name="urls" placeholder="每行一个地址" rows="10"></textarea>
+        <div id="url-error" class="error-message"></div>
+        <label for="work-path">请输入下载存放路径</label>
+        <input type="text" id="work-path" name="work_path" placeholder="请输入下载存放文件夹">
+        <div id="path-error" class="error-message"></div>
+        <button type="submit">提交</button>
+    </form>
+    <div id="result">
+        <table id="result-table"></table>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <p id="modal-text">下载中</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('url-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // 清除之前的错误信息
+            document.getElementById('url-error').textContent = '';
+            document.getElementById('path-error').textContent = '';
+
+            // 获取用户输入的URL，并进行去重处理
+            const urls = Array.from(new Set(document.getElementById('url-input').value.split('\n').filter(url => url.trim() !== '')));
+            const workPath = document.getElementById('work-path').value.trim();
+
+            // 验证URL是否有效
+            const isValidUrl = urls.every(url => url.includes('xiaohongshu.com'));
+            if (!isValidUrl) {
+                document.getElementById('url-error').textContent = '不是有效的小红书地址';
+                return;
+            }
+
+            // 验证本地存放路径是否为空
+            if (!workPath) {
+                document.getElementById('path-error').textContent = '请输入存放路径';
+                return;
+            }
+
+            // 清空表格内容
+            document.getElementById('result-table').innerHTML = '';
+
+            // 显示模态提示
+            document.getElementById('modal').style.display = 'flex';
+
+            // 动态显示“下载中.”、“下载中..”、“下载中...”
+            const modalText = document.getElementById('modal-text');
+            let dots = 0;
+            const interval = setInterval(() => {
+                dots = (dots + 1) % 4;
+                modalText.textContent = '下载中' + '.'.repeat(dots);
+            }, 500);
+
+            fetch('/xhs', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    url: urls.join(' '),
+                    workpath: workPath,  // 添加work_path属性
+                    download: true        // 添加download属性，值为true
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResult(data.data);
+                // 隐藏模态提示
+                document.getElementById('modal').style.display = 'none';
+                // 停止动态显示
+                clearInterval(interval);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // 隐藏模态提示
+                document.getElementById('modal').style.display = 'none';
+                // 停止动态显示
+                clearInterval(interval);
+            });
+        });
+
+        function displayResult(data) {
+            const table = document.getElementById('result-table');
+            table.innerHTML = ''; // 清除之前的结果
+
+            // 创建表格行
+            Object.entries(data).forEach(([key, value]) => {
+                const row = table.insertRow();
+                const cell1 = row.insertCell();
+                const cell2 = row.insertCell();
+                cell1.textContent = key;
+                cell2.textContent = Array.isArray(value) ? value.join(', ') : value;
+            });
+        }
+    </script>
+</body>
+</html>
